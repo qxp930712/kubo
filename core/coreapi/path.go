@@ -69,6 +69,11 @@ func (api *CoreAPI) ResolvePath(ctx context.Context, p path.Path) (path.Immutabl
 		return path.ImmutablePath{}, nil, err
 	}
 
+	// Check if node is nil to prevent null pointer dereference
+	if node == nil {
+		return path.ImmutablePath{}, nil, fmt.Errorf("resolver returned nil node for path: %s", p.String())
+	}
+
 	segments := []string{p.Namespace(), node.String()}
 	segments = append(segments, remainder...)
 
